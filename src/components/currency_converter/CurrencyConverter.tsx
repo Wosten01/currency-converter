@@ -1,4 +1,3 @@
-// export default CurrencyConverter;
 import React, { useState } from "react";
 import { Currency, exchangeRates } from "../../data/currency";
 
@@ -90,7 +89,6 @@ const CurrencyConverter = () => {
         Конвертация валют
       </h1>
       <div className="flex flex-col sm:flex-row justify-center items-center gap-8">
-        {/* Блок для ввода данных */}
         <section className="flex flex-col gap-4 w-full sm:w-5/12">
           <h2 className="text-xl sm:text-2xl">Хочу поменять:</h2>
           <div className="relative inline-block">
@@ -130,7 +128,6 @@ const CurrencyConverter = () => {
           </div>
         </section>
 
-        {/* Кнопка обмена */}
         <section className="self-center sm:mt-24">
           <button
             onClick={handleConvertClick}
@@ -144,7 +141,6 @@ const CurrencyConverter = () => {
           </button>
         </section>
 
-        {/* Блок для вывода результата */}
         <section className="flex flex-col gap-4 w-full sm:w-5/12">
           <h2 className="text-xl sm:text-2xl">Получу:</h2>
           <div className="relative inline-block">
