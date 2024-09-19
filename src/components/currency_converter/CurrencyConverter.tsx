@@ -80,7 +80,7 @@ const CurrencyConverter = () => {
       const tmp = currencyFrom;
       setCurrencyFrom(currencyTo)
       setCurrencyTo(tmp)
-      calculateConversion(amount, currencyFrom, currencyTo);
+      calculateConversion(amount, currencyTo, tmp);
     }
   };
 
