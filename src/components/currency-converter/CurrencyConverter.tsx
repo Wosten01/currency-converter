@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { useGetRatesQuery } from "../../api/currencyApi";
 import CurrencySelector, { Option } from "./CurrencySelector";
 import { SingleValue } from "react-select";
-import { currencyOptions } from "../../data/currency";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { setCurrencyFrom, setCurrencyTo, swapCurrencies } from "../../store/currencySlice";
 
 const CurrencyConverter = () => {
-  const [currencyFrom, setCurrencyFrom] = useState<SingleValue<Option>>(
-    currencyOptions[Math.floor(Math.random() * currencyOptions.length)]
-  );
-  const [currencyTo, setCurrencyTo] = useState<SingleValue<Option>>(
-    currencyOptions[Math.floor(Math.random() * currencyOptions.length)]
-  );
+
+  const dispatch = useDispatch();
+  const currencyFrom = useSelector((state: RootState) => state.currency.from);
+  const currencyTo = useSelector((state: RootState) => state.currency.to);
 
   const [amount, setAmount] = useState<string>("");
   const [convertedAmount, setConvertedAmount] = useState<number>(0);
@@ -22,7 +22,7 @@ const CurrencyConverter = () => {
   } = useGetRatesQuery(currencyFrom?.value);
 
   const handleCurrencyFromChange = (option: SingleValue<Option>) => {
-    setCurrencyFrom(option);
+    dispatch(setCurrencyFrom(option));
     calculateConversion(
       amount,
       currencyFrom!.value,
@@ -93,11 +93,9 @@ const CurrencyConverter = () => {
   };
 
   const handleConvertClick = () => {
-    const tmp = currencyFrom;
-    setCurrencyFrom(currencyTo);
-    setCurrencyTo(tmp);
+    dispatch(swapCurrencies());
     const currentConvertedAmount = convertedAmount;
-    calculateConversion(amount, currencyTo!.value, tmp!.value);
+    calculateConversion(amount, currencyTo!.value, currencyFrom!.value);
     if (currentConvertedAmount !== 0) {
       setAmount(currentConvertedAmount.toString());
     }

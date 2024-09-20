@@ -24,7 +24,7 @@ const CurrencySelector = ({
       value={selectedOption}
       onChange={handleChange}
       options={currencyOptions}
-      defaultValue={currencyOptions[0]}
+      defaultValue={selectedOption}
     />
   );
 };

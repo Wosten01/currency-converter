@@ -1,12 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { currencyApi } from '../api/currencyApi';
+import currencyReducer from "./currencySlice"
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
+    currency: currencyReducer,
     [currencyApi.reducerPath]: currencyApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(currencyApi.middleware),
 });
 
-export default store
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
