@@ -1,13 +1,13 @@
 // import './App.css'
-import CurrencyConverter from "./components/currency_converter/CurrencyConverter";
+import { Provider } from "react-redux";
+import CurrencyConverter from "./components/currency-converter/CurrencyConverter";
+import store from "./store";
 
 function App() {
   return (
-    <>
-      <div className="">
+    <Provider store={store}>
         <CurrencyConverter />
-      </div>
-    </>
+    </Provider>
   );
 }
 
