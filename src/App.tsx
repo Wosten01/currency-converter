@@ -6,15 +6,21 @@ import CurrencyRatesList from "./components/currency-list/CurrencyList";
 // import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { store } from "./store";
+import Header from "./components/header/Header";
 
 const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        <Routes>
-          <Route path="/" element={<CurrencyConverter />} />
-          <Route path="/list" element={<CurrencyRatesList />} />
-        </Routes>
+        <div>
+          <Header />
+          <div className="pt-20 p-4">
+            <Routes>
+              <Route path="/" element={<CurrencyConverter />} />
+              <Route path="/list" element={<CurrencyRatesList />} />
+            </Routes>
+          </div>
+        </div>
       </Router>
     </Provider>
   );

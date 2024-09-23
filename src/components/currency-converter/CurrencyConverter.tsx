@@ -9,7 +9,9 @@ import {
   setCurrencyTo,
   swapCurrencies,
 } from "../../store/currencySlice";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import Decimal from "decimal.js";
+import { formatCurrency } from "../../utils";
 
 const CurrencyConverter = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,20 +30,30 @@ const CurrencyConverter = () => {
     refetch,
   } = useGetRatesQuery(store.getState().currency.from?.value);
 
-  const navigate = useNavigate(); // Хук для программной навигации
+  // const navigate = useNavigate(); 
 
-  const goToListPage = () => {
-    navigate("/list"); // Перемещение на страницу списка
-  };
+  // const goToListPage = () => {
+  //   navigate("/list");
+  // };
 
   const handleCurrencyFromChange = (option: SingleValue<Option>) => {
     dispatch(setCurrencyFrom(option));
-    calculateConversion(amount, currencyFrom!.value, currencyTo!.value, rates);
+    calculateConversion(
+      amount,
+      store.getState().currency.from!.value,
+      store.getState().currency.to!.value,
+      rates
+    );
   };
 
   const handleCurrencyToChange = (option: SingleValue<Option>) => {
     dispatch(setCurrencyTo(option));
-    calculateConversion(amount, currencyFrom!.value, currencyTo!.value, rates);
+    calculateConversion(
+      amount,
+      store.getState().currency.from!.value,
+      store.getState().currency.to!.value,
+      rates
+    );
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +68,7 @@ const CurrencyConverter = () => {
     let formattedInput = formattedIntegerPart;
 
     if (parts.length > 1) {
-      const fractionalPart = parts[1].substring(0, 4);
+      const fractionalPart = parts[1].substring(0, 10);
       formattedInput += `.${fractionalPart}`;
     }
     if (formattedInput.replace(".", "").length <= 9) {
@@ -87,22 +99,11 @@ const CurrencyConverter = () => {
     }
 
     const rate = rates["conversion_rates"][to] || 0;
-    console.log(typeof rates)
     const result = parseFloat(amount) * rate;
     setConvertedAmount(Number(formatCurrency(result)));
   };
 
-  const formatCurrency = (value: number): string => {
-    const formattedValue = value.toFixed(4);
-    const [integerPart, fractionalPart] = formattedValue.split(".");
 
-    if (fractionalPart && fractionalPart !== "0000") {
-      const trimmedFractional = fractionalPart.replace(/0+$/, "");
-      return `${integerPart}.${trimmedFractional.substring(0, 4)}`;
-    }
-
-    return integerPart;
-  };
 
   const handleConvertClick = async () => {
     dispatch(swapCurrencies());
@@ -125,29 +126,44 @@ const CurrencyConverter = () => {
     }
   }, [refetch, refresh]);
 
-  if (isLoading) return <div className="text-black ">Loading...</div>;
-  if (error) return <div className="text-black ">Error loading rates</div>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-black text-2xl font-semibold">Подождите идет загрузка...</div>
+      </div>
+    );
+  }
+
+
+
+  if (error) {
+    console.error(error)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-black text-2xl font-semibold">
+          Ошибка при получении данных
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="text-black space-y-10 p-6 max-w-4xl mx-auto flex flex-col items-center ">
       <div>
-        <h1 className="text-5xl sm:text-3xl text-center font-bold mb-6">
-          Конвертация валют
-        </h1>
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-8">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-8 ">
           <section className="flex flex-col gap-4 w-full sm:w-5/12">
             <div className="flex flex-col gap-1">
-              <h2 className="text-lg">Хочу поменять:</h2>
+              <h2 className="text-lg ">Хочу поменять:</h2>
               <CurrencySelector
                 selectedOption={currencyFrom}
                 setSelectedOption={handleCurrencyFromChange}
               />
             </div>
-            <div className="border border-gray-300 p-4 rounded-lg">
+            <div className="border border-gray-300 bg-gray-100 p-4 rounded-lg">
               <input
                 value={amount}
                 onInput={handleInputChange}
-                className="w-full text-4xl font-bold border-none focus:outline-none focus:ring-0"
+                className=" bg-gray-100 w-full text-4xl font-bold border-none focus:outline-none focus:ring-0"
               />
               <label className="block text-gray-500 mt-2">
                 1 {currencyFrom?.value} ={" "}
@@ -182,7 +198,7 @@ const CurrencyConverter = () => {
                 setSelectedOption={handleCurrencyToChange}
               />
             </div>
-            <div className="border border-gray-300 p-4 rounded-lg">
+            <div className="border bg-gray-100 border-gray-300 p-4 rounded-lg">
               <input
                 value={
                   !isLoading
@@ -192,28 +208,31 @@ const CurrencyConverter = () => {
                     : ""
                 }
                 readOnly
-                className="w-full text-4xl font-bold border-none focus:outline-none focus:ring-0"
+                className="bg-gray-100 w-full text-4xl font-bold border-none focus:outline-none focus:ring-0"
               />
               <label className="block text-gray-500 mt-2">
                 1 {currencyTo?.value} ={" "}
-                {currencyTo === currencyFrom
-                  ? 1
-                  : formatCurrency(
-                      1 / rates["conversion_rates"][currencyTo!.value]
-                    )}{" "}
+                {
+                  currencyTo === currencyFrom
+                    ? 1
+                    : formatCurrency(
+                        new Decimal(1).div(
+                          rates["conversion_rates"][currencyTo!.value]
+                        )
+                      )
+                }{" "}
                 {currencyFrom?.value}
               </label>
             </div>
           </section>
         </div>
-        
       </div>
-      <button
-          onClick={goToListPage}
-          className="mt-20 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          Перейти к списку курсов валют
-        </button>
+      {/* <button
+        onClick={goToListPage}
+        className="mt-20 px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-[#2584ff] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+      >
+        Перейти к списку курсов валют
+      </button> */}
     </div>
   );
 };
