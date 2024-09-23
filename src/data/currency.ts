@@ -1,4 +1,3 @@
-
 export const currencyNames = {
   AED: "Дирхам ОАЭ",
   AFN: "Афганистанский афгани",
