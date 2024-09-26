@@ -12,7 +12,7 @@ const Header = () => {
             to="/"
             className="text-sm md:text-base hover:text-gray-200 transition-colors duration-300"
           >
-            Конвертор валют
+            Конвертер валют
           </Link>
           <Link
             to="/list"

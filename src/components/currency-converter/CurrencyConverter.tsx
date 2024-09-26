@@ -12,6 +12,7 @@ import {
 // import { useNavigate } from "react-router-dom";
 import Decimal from "decimal.js";
 import { formatCurrency } from "../../utils";
+import transfer from '../../../src/assets/transfer.svg';
 
 const CurrencyConverter = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -183,7 +184,7 @@ const CurrencyConverter = () => {
               className="hover:opacity-50 transition duration-300 font-bold py-3 px-6 rounded-full"
             >
               <img
-                src={"../../../src/assets/transfer.svg"}
+                src={transfer}
                 alt="Transfer"
                 className="w-8 h-8"
               />
@@ -211,7 +212,7 @@ const CurrencyConverter = () => {
                 className="bg-gray-100 w-full text-4xl font-bold border-none focus:outline-none focus:ring-0"
               />
               <label className="block text-gray-500 mt-2">
-                1 {currencyTo?.value} ={" "}
+                1 {currencyTo?.value} ≈{" "}
                 {
                   currencyTo === currencyFrom
                     ? 1
