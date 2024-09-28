@@ -10,6 +10,8 @@ import { useGetRatesQuery } from "../../api/currencyApi";
 import { setCurrencyFrom, setCurrencyTo } from "../../store/currencySlice";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTh, faThList } from "@fortawesome/free-solid-svg-icons";
 
 const CurrencyRatesList = () => {
   const dispatch = useDispatch();
@@ -68,11 +70,21 @@ const CurrencyRatesList = () => {
     dispatch(setCurrencyTo(option));
     navigate("/");
   };
+  const [viewMode, setViewMode] = useState(3); // 1 - по 1 элементу, 3 - по 3 элемента
+
+  const handleViewModeChange = (mode: number) => {
+    setViewMode(mode);
+  };
+
+  const gridClasses =
+    viewMode === 1
+      ? "grid-cols-1"
+      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
 
   return (
-    <main className="text-black space-y-4 p-6 max-w-4xl mx-auto">
+    <main className="text-black space-y-4 p-6 max-w-6xl mx-auto">
       <section>
-        <h2 className="text-gray-400">Базовая валюта:</h2>
+        <h2 className="text-gray-400 font-bold text-base sm:text-xl">Базовая валюта:</h2>
         <CurrencySelector
           selectedOption={selectedCurrency}
           setSelectedOption={handleCurrencyChange}
@@ -80,61 +92,90 @@ const CurrencyRatesList = () => {
       </section>
 
       <section>
-        <h2 className="text-gray-400">Сумма для конвертации:</h2>
+        <h2 className="text-gray-400 font-bold text-base sm:text-xl">Сумма для конвертации:</h2>
         <input
           value={amount}
           onInput={handleInputChange}
-          className="border border-gray-300 p-2 w-full rounded-md "
+          className="border text-[#06397b] border-gray-300 p-1 w-full rounded-md text-3xl font-bold text-center"
         />
       </section>
 
       <section>
-        <h2 className="text-gray-400">Искомая валюта:</h2>
+        <h2 className="text-gray-400 font-bold text-base sm:text-xl">Искомая валюта:</h2>
         <input
           type="search"
           placeholder="Введите искомую валюту..."
           value={searchTerm}
           onChange={handleSearchChange}
-          className="border border-gray-300 p-2 w-full rounded-md "
+          className="border border-gray-300 p-2 w-full rounded-md  text-xl"
         />
       </section>
 
       <section className="">
-        <h2 className="text-gray-400">
-          Из списка ниже выберете валюту, в которую хотите конвертировать и
-          нажмите на неё:
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
+        <div className="flex justify-between items-center">
+          <h2 className="text-gray-400">
+            Из списка ниже выберете валюту, в которую хотите конвертировать и
+            нажмите на неё:
+          </h2>
+          <div className="space-x-4 hidden sm:flex">
+            <button
+              onClick={() => handleViewModeChange(1)}
+              className="p-2 rounded-md hover:bg-gray-200 transition duration-200"
+            >
+              <FontAwesomeIcon
+                icon={faThList}
+                className={`text-gray-600 ${
+                  viewMode === 1 ? "text-blue-500" : ""
+                }`}
+              />
+            </button>
+            <button
+              onClick={() => handleViewModeChange(3)}
+              className="p-2 rounded-md hover:bg-gray-200 transition duration-200"
+            >
+              <FontAwesomeIcon
+                icon={faTh}
+                className={`text-gray-600 ${
+                  viewMode === 3 ? "text-blue-500" : ""
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
+        <div className={`grid ${gridClasses} gap-4 mt-2`}>
           {filteredCurrencies.length > 0 ? (
-            filteredCurrencies.map(([value, label]) => (
-              <button onClick={handleCurrencyButton({ value, label })}>
-                <div
+            filteredCurrencies
+              .filter(([value]) => value != selectedCurrency?.value)
+              .map(([value, label]) => (
+                <button
                   key={value}
-                  className=" border p-4 rounded-lg shadow-md text-center flex flex-col justify-center h-32 hover:bg-[#2584ff] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+                  onClick={handleCurrencyButton({ value, label })}
                 >
-                  <h2 className="text-3xl font-bold">
-                    {!error && !isLoading
-                      ? formatCurrency(
-                          rates?.conversion_rates[value] *
-                            (amount ? parseFloat(amount) : 1)
-                        ) || 0
-                      : 0}
-                  </h2>
-                  <h3 className="text-lg">{value}</h3>
-                  <p
-                    className={`font-extralight ${
-                      label.length > 15
-                        ? label.length > 20
-                          ? "text-sm"
-                          : "text-xs"
-                        : ""
-                    }`}
-                  >
-                    {label}
-                  </p>
-                </div>
-              </button>
-            ))
+                  <div className=" border p-4 rounded-lg shadow-md text-center flex flex-col justify-center h-32 hover:bg-[#156ada] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300">
+                    <h2 className="text-3xl font-bold   hover:text-white">
+                      {!error && !isLoading
+                        ? formatCurrency(
+                            rates?.rates[value] *
+                              (amount ? parseFloat(amount) : 1)
+                          ) || 0
+                        : 0}
+                    </h2>
+                    <h3 className="text-xl">{value}</h3>
+                    <p
+                      className={`font-extralight ${
+                        label.length > 15
+                          ? label.length > 20
+                            ? "text-lg"
+                            : "text-base"
+                          : ""
+                      }`}
+                    >
+                      {label}
+                    </p>
+                  </div>
+                </button>
+              ))
           ) : (
             <p className="text-center col-span-full">Валюта не найдена</p>
           )}

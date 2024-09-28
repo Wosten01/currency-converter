@@ -12,7 +12,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        <div>
+        <div className="">
           <Header />
           <div className="pt-20 p-4">
             <Routes>

@@ -9,8 +9,10 @@ interface CurrencyState {
 }
 
 const initialState: CurrencyState = {
-    from: currencyOptions[117],
-    to: currencyOptions[70],
+  from: currencyOptions[8],
+  to: currencyOptions[6],
+    // from: currencyOptions[117],
+    // to: currencyOptions[70],
 //   from: currencyOptions[Math.floor(Math.random() * currencyOptions.length)],
 //   to: currencyOptions[Math.floor(Math.random() * currencyOptions.length)],
 };

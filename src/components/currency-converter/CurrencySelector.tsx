@@ -25,6 +25,29 @@ const CurrencySelector = ({
       onChange={handleChange}
       options={currencyOptions}
       defaultValue={selectedOption}
+      styles={{
+        control: (provided) => ({
+          ...provided,
+          minHeight: "48px",
+          fontSize: "18px",
+          "@media (max-width: 768px)": {
+            minHeight: "40px",
+            fontSize: "16px", 
+          },
+          "@media (max-width: 480px)": {
+            minHeight: "36px", 
+            fontSize: "14px",
+          },
+        }),
+        option: (provided) => ({
+          ...provided,
+          fontSize: "18px",
+        }),
+        menu: (provided) => ({
+          ...provided,
+          zIndex: 999,
+        }),
+      }}
     />
   );
 };
