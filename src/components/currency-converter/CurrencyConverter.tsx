@@ -130,6 +130,15 @@ const CurrencyConverter = () => {
     }
   }, [refetch, refresh]);
 
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      await refetch();
+      await refetchTargetRate();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [refetch, refetchTargetRate]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -227,6 +236,10 @@ const CurrencyConverter = () => {
             </div>
           </section>
         </div>
+
+        <section className=" pb-5 pt-5 text-end">
+          <h2 className=" text-gray-400 font-bold text-base sm:text-xl ">Данные на момент: {(new Date(rates.date)).toLocaleString()}</h2>
+        </section>
       </div>
     </div>
   );
