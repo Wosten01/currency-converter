@@ -163,9 +163,9 @@ const CurrencyRatesList = () => {
                                 flex-col justify-center h-32 
                                 hover:bg-[#2584ff] hover:text-white 
                                 focus:outline-none focus:ring-2 focus:ring-blue-400 
-                                transition duration-300"
+                                transition duration-300 group"
                   >
-                    <h2 className="text-3xl font-bold text-[#156ada]">
+                    <h2 className="text-3xl font-bold text-[#156ada] group-hover:text-white">
                       {!error && !isLoading
                         ? formatCurrency(
                             rates?.rates[value] *
@@ -173,7 +173,7 @@ const CurrencyRatesList = () => {
                           ) || 0
                         : 0}
                     </h2>
-                    <h3 className="text-xl text-[#156ada]">{value}</h3>
+                    <h3 className="text-xl text-[#156ada] group-hover:text-white">{value}</h3>
                     <p
                       className={`  ${
                         label.length > 20
