@@ -1,8 +1,10 @@
-import { fetchCurrencies } from "../api/currencyApi";
+import { fetchBaseCurrency, fetchCurrencies } from "../api/currencyApi";
 
 type CurrencyMap = {
   [key: string]: string;
 };
+
+export const baseCurrency = await fetchBaseCurrency()
 
 const currencyNamesResponse: CurrencyMap = await fetchCurrencies();
 
