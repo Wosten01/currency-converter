@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
-import { Currencies } from "../data/currency";
 
 const hostname = import.meta.env.VITE_BACKEND_HOSTNAME;
 

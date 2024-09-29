@@ -12,6 +12,7 @@ import {
 import { formatCurrency } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExchangeAlt } from "@fortawesome/free-solid-svg-icons";
+import { ExchangeRates } from "../../data/dto";
 
 const CurrencyConverter = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -93,7 +94,7 @@ const CurrencyConverter = () => {
     amount: string,
     from: string,
     to: string,
-    rates: any
+    rates: ExchangeRates
   ) => {
     if (amount && from === to) {
       setConvertedAmount(parseFloat(amount));

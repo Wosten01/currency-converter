@@ -70,7 +70,7 @@ const CurrencyRatesList = () => {
     dispatch(setCurrencyTo(option));
     navigate("/");
   };
-  const [viewMode, setViewMode] = useState(3); // 1 - по 1 элементу, 3 - по 3 элемента
+  const [viewMode, setViewMode] = useState(3);
 
   const handleViewModeChange = (mode: number) => {
     setViewMode(mode);
@@ -84,7 +84,9 @@ const CurrencyRatesList = () => {
   return (
     <main className="text-black space-y-4 p-6 max-w-6xl mx-auto">
       <section>
-        <h2 className="text-gray-400 font-bold text-base sm:text-xl">Базовая валюта:</h2>
+        <h2 className="text-gray-400 font-bold text-base sm:text-xl">
+          Базовая валюта:
+        </h2>
         <CurrencySelector
           selectedOption={selectedCurrency}
           setSelectedOption={handleCurrencyChange}
@@ -92,7 +94,9 @@ const CurrencyRatesList = () => {
       </section>
 
       <section>
-        <h2 className="text-gray-400 font-bold text-base sm:text-xl">Сумма для конвертации:</h2>
+        <h2 className="text-gray-400 font-bold text-base sm:text-xl">
+          Сумма для конвертации:
+        </h2>
         <input
           value={amount}
           onInput={handleInputChange}
@@ -101,7 +105,9 @@ const CurrencyRatesList = () => {
       </section>
 
       <section>
-        <h2 className="text-gray-400 font-bold text-base sm:text-xl">Искомая валюта:</h2>
+        <h2 className="text-gray-400 font-bold text-base sm:text-xl">
+          Искомая валюта:
+        </h2>
         <input
           type="search"
           placeholder="Введите искомую валюту..."
@@ -152,8 +158,14 @@ const CurrencyRatesList = () => {
                   key={value}
                   onClick={handleCurrencyButton({ value, label })}
                 >
-                  <div className=" border p-4 rounded-lg shadow-md text-center flex flex-col justify-center h-32 text-[#156ada] hover:bg-[#2584ff] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300">
-                    <h2 className="text-3xl font-bold">
+                  <div
+                    className=" border p-4 rounded-lg shadow-md text-center flex 
+                                flex-col justify-center h-32 
+                                hover:bg-[#2584ff] hover:text-white 
+                                focus:outline-none focus:ring-2 focus:ring-blue-400 
+                                transition duration-300"
+                  >
+                    <h2 className="text-3xl font-bold text-[#156ada]">
                       {!error && !isLoading
                         ? formatCurrency(
                             rates?.rates[value] *
@@ -161,14 +173,14 @@ const CurrencyRatesList = () => {
                           ) || 0
                         : 0}
                     </h2>
-                    <h3 className="text-xl">{value}</h3>
+                    <h3 className="text-xl text-[#156ada]">{value}</h3>
                     <p
-                      className={`font-extralight ${
-                        label.length > 15
-                          ? label.length > 20
-                            ? "text-xl"
-                            : "text-lg"
-                          : ""
+                      className={`  ${
+                        label.length > 20
+                          ? label.length > 25
+                            ? "text-lg"
+                            : "text-base"
+                          : "text-xl"
                       }`}
                     >
                       {label}
