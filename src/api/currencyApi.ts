@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
+import { Currencies } from "../data/currency";
 
 const hostname = import.meta.env.VITE_BACKEND_HOSTNAME;
 
@@ -32,12 +33,22 @@ export const {
   useGetCurrencyByLanguageQuery,
 } = currencyApi;
 
-export async function fetchCurrency() {
+export async function fetchBaseCurrency() {
   try {
     const response = await axios.get(`${hostname}/api/location/get-currency`);
     return response.data.currency;
   } catch (error) {
     console.error("Error fetching currency:", error);
     return "USD";
+  }
+}
+
+export async function fetchCurrencies()   {
+  try {
+    const response = await axios.get(`${hostname}/api/currency/all`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching currency:", error);
+    return { "RUB": "Российский рубль", "USD": "Доллар США" };
   }
 }
