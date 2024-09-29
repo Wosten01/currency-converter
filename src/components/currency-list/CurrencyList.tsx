@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SingleValue } from "react-select";
 import CurrencySelector, {
   Option,
@@ -25,6 +25,7 @@ const CurrencyRatesList = () => {
     data: rates,
     error,
     isLoading,
+    refetch,
   } = useGetRatesQuery(selectedCurrency?.value);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -81,6 +82,14 @@ const CurrencyRatesList = () => {
       ? "grid-cols-1"
       : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
 
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      await refetch();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [refetch]);
+
   return (
     <main className="text-black space-y-4 p-6 max-w-6xl mx-auto">
       <section>
@@ -118,6 +127,7 @@ const CurrencyRatesList = () => {
       </section>
 
       <section className="">
+
         <div className="flex justify-between items-center">
           <h2 className="text-gray-400">
             Из списка ниже выберете валюту, в которую хотите конвертировать и
@@ -149,6 +159,14 @@ const CurrencyRatesList = () => {
           </div>
         </div>
 
+        <section className="  text-center sm:text-end p-2 sm:p-0">
+        <h2 className=" text-gray-400 font-bold text-base sm:text-xl">
+          {isLoading || error
+            ? ""
+            : `Данные на момент: ${new Date(rates.date).toLocaleString()}`}
+        </h2>
+      </section>
+
         <div className={`grid ${gridClasses} gap-4 mt-2`}>
           {filteredCurrencies.length > 0 ? (
             filteredCurrencies
@@ -173,7 +191,9 @@ const CurrencyRatesList = () => {
                           ) || 0
                         : 0}
                     </h2>
-                    <h3 className="text-xl text-[#156ada] group-hover:text-white">{value}</h3>
+                    <h3 className="text-xl text-[#156ada] group-hover:text-white">
+                      {value}
+                    </h3>
                     <p
                       className={`  ${
                         label.length > 20
@@ -193,6 +213,8 @@ const CurrencyRatesList = () => {
           )}
         </div>
       </section>
+
+      
     </main>
   );
 };
