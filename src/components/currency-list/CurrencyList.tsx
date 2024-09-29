@@ -96,7 +96,7 @@ const CurrencyRatesList = () => {
         <input
           value={amount}
           onInput={handleInputChange}
-          className="border text-[#06397b] border-gray-300 p-1 w-full rounded-md text-3xl font-bold text-center"
+          className="border text-[#156ada] border-gray-300 p-1 w-full rounded-md text-3xl font-bold text-center"
         />
       </section>
 
@@ -152,8 +152,8 @@ const CurrencyRatesList = () => {
                   key={value}
                   onClick={handleCurrencyButton({ value, label })}
                 >
-                  <div className=" border p-4 rounded-lg shadow-md text-center flex flex-col justify-center h-32 hover:bg-[#156ada] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300">
-                    <h2 className="text-3xl font-bold   hover:text-white">
+                  <div className=" border p-4 rounded-lg shadow-md text-center flex flex-col justify-center h-32 text-[#156ada] hover:bg-[#2584ff] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300">
+                    <h2 className="text-3xl font-bold">
                       {!error && !isLoading
                         ? formatCurrency(
                             rates?.rates[value] *
@@ -166,8 +166,8 @@ const CurrencyRatesList = () => {
                       className={`font-extralight ${
                         label.length > 15
                           ? label.length > 20
-                            ? "text-lg"
-                            : "text-base"
+                            ? "text-xl"
+                            : "text-lg"
                           : ""
                       }`}
                     >

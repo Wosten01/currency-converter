@@ -1,20 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { currencyOptions } from "../data/currency";
+import {currencyOptions } from "../data/currency";
 import { Option } from "../components/currency-converter/CurrencySelector";
 import { SingleValue } from "react-select";
+import { fetchCurrency } from "../api/currencyApi";
 
 interface CurrencyState {
   from: SingleValue<Option>;
   to: SingleValue<Option>;
 }
+ const baseCurrency = await fetchCurrency()
 
 const initialState: CurrencyState = {
-  from: currencyOptions[8],
-  to: currencyOptions[6],
-    // from: currencyOptions[117],
-    // to: currencyOptions[70],
-//   from: currencyOptions[Math.floor(Math.random() * currencyOptions.length)],
-//   to: currencyOptions[Math.floor(Math.random() * currencyOptions.length)],
+  from: currencyOptions[
+    currencyOptions.findIndex(({ value }) => value === baseCurrency)
+  ],
+  to: currencyOptions[Math.floor(Math.random() * currencyOptions.length)],
 };
 
 const currencySlice = createSlice({

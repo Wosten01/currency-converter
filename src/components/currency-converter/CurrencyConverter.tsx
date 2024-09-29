@@ -40,8 +40,10 @@ const CurrencyConverter = () => {
     to: store.getState().currency.from?.value,
   });
 
-  const handleCurrencyFromChange = (option: SingleValue<Option>) => {
+  const handleCurrencyFromChange = async (option: SingleValue<Option>) => {
     dispatch(setCurrencyFrom(option));
+    await refetchTargetRate();
+    const rates = (await refetch()).data;
     calculateConversion(
       amount,
       store.getState().currency.from!.value,
@@ -154,7 +156,9 @@ const CurrencyConverter = () => {
         <div className="flex flex-col sm:flex-row justify-center items-center gap-12">
           <section className="flex flex-col gap-6 w-full sm:w-5/12">
             <div className="flex flex-col gap-2">
-              <h2 className="text-gray-400 font-bold text-base sm:text-xl">Хочу поменять:</h2>
+              <h2 className="text-gray-400 font-bold text-base sm:text-xl">
+                Хочу поменять:
+              </h2>
               <CurrencySelector
                 selectedOption={currencyFrom}
                 setSelectedOption={handleCurrencyFromChange}
@@ -181,13 +185,18 @@ const CurrencyConverter = () => {
               onClick={handleConvertClick}
               className="hover:opacity-50  transition duration-300 font-bold py-5 px-10 rounded-full"
             >
-               <FontAwesomeIcon icon={faExchangeAlt} className="text-4xl text-[#2584ff]" />
+              <FontAwesomeIcon
+                icon={faExchangeAlt}
+                className="text-4xl text-[#2584ff]"
+              />
             </button>
           </section>
 
           <section className="flex flex-col gap-6 w-full sm:w-5/12">
             <div className="flex flex-col gap-2">
-              <h2 className="text-gray-400 font-bold text-base sm:text-xl">Получу:</h2>
+              <h2 className="text-gray-400 font-bold text-base sm:text-xl">
+                Получу:
+              </h2>
               <CurrencySelector
                 selectedOption={currencyTo}
                 setSelectedOption={handleCurrencyToChange}
