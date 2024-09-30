@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useGetRatesQuery, useGetTargetRateQuery } from "../../api/currencyApi";
-import CurrencySelector, { Option } from "./CurrencySelector";
+import { Option } from "./CurrencySelector";
 import { SingleValue } from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, store } from "../../store";
@@ -9,10 +9,11 @@ import {
   setCurrencyTo,
   swapCurrencies,
 } from "../../store/currencySlice";
-import { formatCurrency } from "../../utils";
+import { formatCurrency, formatInputValue } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExchangeAlt } from "@fortawesome/free-solid-svg-icons";
 import { ExchangeRates } from "../../data/dto";
+import CurrencyInputSection from "./CurrencyInput";
 
 const CurrencyConverter = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -65,20 +66,8 @@ const CurrencyConverter = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let inputValue = e.target.value;
+    const formattedInput = formatInputValue(e.target.value);
 
-    inputValue = inputValue.replace(/,/g, ".");
-
-    const validInput = inputValue.replace(/[^0-9.]/g, "");
-    const parts = validInput.split(".");
-    const formattedIntegerPart = parts[0].replace(/^0+(?=\d)/, "");
-
-    let formattedInput = formattedIntegerPart;
-
-    if (parts.length > 1) {
-      const fractionalPart = parts[1].substring(0, 10);
-      formattedInput += `.${fractionalPart}`;
-    }
     if (formattedInput.replace(".", "").length <= 9) {
       calculateConversion(
         formattedInput,
@@ -164,31 +153,18 @@ const CurrencyConverter = () => {
     <div className="text-black space-y-12 p-6 max-w-6xl mx-auto flex flex-col items-center">
       <div>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-12">
-          <section className="flex flex-col gap-6 w-full sm:w-5/12">
-            <div className="flex flex-col gap-2">
-              <h2 className="text-gray-400 font-bold text-base sm:text-xl">
-                Хочу поменять:
-              </h2>
-              <CurrencySelector
-                selectedOption={currencyFrom}
-                setSelectedOption={handleCurrencyFromChange}
-              />
-            </div>
-            <div className="border border-gray-300 bg-gray-100 p-6 rounded-lg">
-              <input
-                value={amount}
-                onInput={handleInputChange}
-                className="bg-gray-100 text-[#156ada] w-full text-5xl font-bold border-none focus:outline-none focus:ring-0"
-              />
-              <label className="block text-gray-500 mt-2 text-xl">
-                1 {currencyFrom?.value} ={" "}
-                {currencyTo === currencyFrom
-                  ? 1
-                  : formatCurrency(rates.rates[currencyTo!.value])}{" "}
-                {currencyTo?.value}
-              </label>
-            </div>
-          </section>
+          <CurrencyInputSection
+            title="Хочу поменять:"
+            selectedCurrency={currencyFrom}
+            onCurrencyChange={handleCurrencyFromChange}
+            amount={amount}
+            onInputChange={handleInputChange}
+            conversionRateLabel={`1 ${currencyFrom?.value} = ${
+              currencyTo === currencyFrom
+                ? 1
+                : formatCurrency(rates.rates[currencyTo!.value])
+            } ${currencyTo?.value}`}
+          />
 
           <section className="self-center sm:mt-24">
             <button
@@ -202,43 +178,28 @@ const CurrencyConverter = () => {
             </button>
           </section>
 
-          <section className="flex flex-col gap-6 w-full sm:w-5/12">
-            <div className="flex flex-col gap-2">
-              <h2 className="text-gray-400 font-bold text-base sm:text-xl">
-                Получу:
-              </h2>
-              <CurrencySelector
-                selectedOption={currencyTo}
-                setSelectedOption={handleCurrencyToChange}
-              />
-            </div>
-            <div className="border bg-gray-100 border-gray-300 p-6 rounded-lg">
-              <input
-                value={
-                  !isLoading
-                    ? convertedAmount || ""
-                    : error
-                    ? String(error)
-                    : ""
-                }
-                readOnly
-                className="bg-gray-100 text-[#156ada] w-full text-5xl font-bold border-none focus:outline-none focus:ring-0"
-              />
-              <label className="block text-gray-500 mt-2 text-xl">
-                1 {currencyTo?.value} ={" "}
-                {currencyTo === currencyFrom
-                  ? 1
-                  : isLoadingTargetRate || errorTargetRate
-                  ? ""
-                  : formatCurrency(dataTargetRate.amount)}{" "}
-                {currencyFrom?.value}
-              </label>
-            </div>
-          </section>
+          <CurrencyInputSection
+            title="Получу:"
+            selectedCurrency={currencyTo}
+            onCurrencyChange={handleCurrencyToChange}
+            amount={
+              !isLoading ? convertedAmount || "" : error ? String(error) : ""
+            }
+            readOnly
+            conversionRateLabel={`1 ${currencyTo?.value} = ${
+              currencyTo === currencyFrom
+                ? 1
+                : isLoadingTargetRate || errorTargetRate
+                ? ""
+                : formatCurrency(dataTargetRate.amount)
+            } ${currencyFrom?.value}`}
+          />
         </div>
 
         <section className=" pb-5 pt-5 text-end">
-          <h2 className=" text-gray-400 font-bold text-base sm:text-xl ">Данные на момент: {(new Date(rates.date)).toLocaleString()}</h2>
+          <h2 className=" text-gray-400 font-bold text-base sm:text-xl ">
+            Данные на момент: {new Date(rates.date).toLocaleString()}
+          </h2>
         </section>
       </div>
     </div>

@@ -9,7 +9,7 @@ import { RootState } from "../../store";
 import { useGetRatesQuery } from "../../api/currencyApi";
 import { setCurrencyFrom, setCurrencyTo } from "../../store/currencySlice";
 import { useNavigate } from "react-router-dom";
-import { formatCurrency } from "../../utils";
+import { formatCurrency, formatInputValue } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTh, faThList } from "@fortawesome/free-solid-svg-icons";
 
@@ -33,20 +33,7 @@ const CurrencyRatesList = () => {
   const [amount, setAmount] = useState<string>("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let inputValue = e.target.value;
-
-    inputValue = inputValue.replace(/,/g, ".");
-
-    const validInput = inputValue.replace(/[^0-9.]/g, "");
-    const parts = validInput.split(".");
-    const formattedIntegerPart = parts[0].replace(/^0+(?=\d)/, "");
-
-    let formattedInput = formattedIntegerPart;
-
-    if (parts.length > 1) {
-      const fractionalPart = parts[1].substring(0, 10);
-      formattedInput += `.${fractionalPart}`;
-    }
+    const formattedInput = formatInputValue(e.target.value);
 
     if (formattedInput.replace(".", "").length <= 9) {
       setAmount(formattedInput);

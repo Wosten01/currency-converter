@@ -19,3 +19,21 @@ export const formatCurrency = (value: number | Decimal): string => {
 
   return integerPart;
 };
+
+
+export const formatInputValue = (inputValue: string) => {
+  inputValue = inputValue.replace(/,/g, ".");
+
+  const validInput = inputValue.replace(/[^0-9.]/g, "");
+  const parts = validInput.split(".");
+
+  const formattedIntegerPart = parts[0].replace(/^0+(?=\d)/, "");
+  let formattedInput = formattedIntegerPart;
+
+  if (parts.length > 1) {
+    const fractionalPart = parts[1].substring(0, 10);
+    formattedInput += `.${fractionalPart}`;
+  }
+
+  return formattedInput;
+};
