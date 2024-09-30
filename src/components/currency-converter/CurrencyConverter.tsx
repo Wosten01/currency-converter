@@ -150,9 +150,9 @@ const CurrencyConverter = () => {
   }
 
   return (
-    <div className="text-black space-y-12 p-6 max-w-6xl mx-auto flex flex-col items-center">
+    <div className="text-black space-y-2 sm:space-y-12 p-6 max-w-6xl mx-auto flex flex-col items-center">
       <div>
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-12">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-12">
           <CurrencyInputSection
             title="Хочу поменять:"
             selectedCurrency={currencyFrom}
@@ -169,7 +169,7 @@ const CurrencyConverter = () => {
           <section className="self-center sm:mt-24">
             <button
               onClick={handleConvertClick}
-              className="hover:opacity-50  transition duration-300 font-bold py-5 px-10 rounded-full"
+              className="hover:opacity-50  transition duration-300 font-bold sm:py-5 px-10 rounded-full"
             >
               <FontAwesomeIcon
                 icon={faExchangeAlt}
